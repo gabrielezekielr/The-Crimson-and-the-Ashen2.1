@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Chapter I — The Crimson and The Ashen</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            background: #0b0b0f;
+            color: #e8e0e3;
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        body.no-scroll {
+            overflow: hidden;
+        }
+
+        /* OPENING TITLE SCREEN */
+
+        #titleScreen {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: #000;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 1.5s ease, visibility 1.5s ease;
+        }
+
+        #titleScreen.fade-out {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        #titleScreen h1 {
+            color: #d34b65;
+            font-size: clamp(27px, 5vw, 48px);
+            font-weight: normal;
+            letter-spacing: 3px;
+            margin: 0 20px 22px;
+            opacity: 0;
+            animation: titleReveal 2s ease forwards;
+        }
+
+        .title-divider {
+            width: 150px;
+            height: 2px;
+            background: #d34b65;
+            margin-bottom: 22px;
+            transform: scaleX(0);
+            animation: dividerReveal 1.2s ease forwards;
+            animation-delay: 1s;
+        }
+
+        #titleScreen p {
+            color: #c8bfc3;
+            font-size: 17px;
+            letter-spacing: 6px;
+            opacity: 0;
+            animation: chapterReveal 1.5s ease forwards;
+            animation-delay: 1.5s;
+        }
+
+        #titleScreen .started {
+            color: #d34b65;
+            font-size: 13px;
+            letter-spacing: 5px;
+            margin-top: 45px;
+            opacity: 0;
+            animation: startedReveal 1.5s ease forwards;
+            animation-delay: 2.5s;
+        }
+
+        @keyframes titleReveal {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+                letter-spacing: 8px;
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                letter-spacing: 3px;
+            }
+        }
+
+        @keyframes dividerReveal {
+            to {
+                transform: scaleX(1);
+            }
+        }
+
+        @keyframes chapterReveal {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes startedReveal {
+            0% {
+                opacity: 0;
+                transform: translateY(12px);
+                letter-spacing: 10px;
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+                letter-spacing: 5px;
+            }
+        }
+
+        /* SCROLLABLE STORY */
+
+        #storyContent {
+            display: none;
+            min-height: 100vh;
+            padding: 65px 22px;
+            background: #0b0b0f;
+        }
+
+        #storyContent.story-visible {
+            display: block;
+        }
+
+        .story-container {
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .chapter-heading {
+            text-align: center;
+            margin-bottom: 90px;
+        }
+
+        .chapter-heading .eyebrow {
+            color: #a99ba0;
+            letter-spacing: 5px;
+            font-size: 12px;
+        }
+
+        .chapter-heading h1 {
+            color: #d34b65;
+            font-weight: normal;
+            font-size: clamp(30px, 5vw, 43px);
+            margin: 20px 0;
+        }
+
+        .chapter-heading .divider {
+            width: 100px;
+            height: 2px;
+            background: #d34b65;
+            margin: 25px auto;
+        }
+
+        .chapter-heading p {
+            color: #a99ba0;
+            font-style: italic;
+        }
+
+        .story-scene {
+            margin-bottom: 85px;
+            padding-bottom: 45px;
+            border-bottom: 1px solid #302027;
+        }
+
+        .story-scene h2 {
+            color: #d34b65;
+            font-weight: normal;
+            font-size: clamp(23px, 4vw, 30px);
+            text-align: center;
+            margin: 0 0 15px;
+        }
+
+        .scene-setting {
+            color: #a99ba0;
+            font-style: italic;
+            text-align: center;
+            margin-bottom: 38px;
+        }
+
+        .story-scene p {
+            font-size: 17px;
+            line-height: 1.95;
+            margin: 20px 0;
+            overflow-wrap: anywhere;
+        }
+
+        .story-dialogue {
+            margin: 24px 0;
+            padding-left: 17px;
+            border-left: 2px solid #d34b65;
+        }
+
+        .story-dialogue strong {
+            display: block;
+            color: #d34b65;
+            font-size: 14px;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .story-dialogue p {
+            margin: 0;
+        }
+
+        .story-thought {
+            color: #c58acb;
+            font-style: italic;
+            margin: 25px 18px !important;
+        }
+
+        .story-year {
+            color: #d34b65;
+            text-align: center;
+            letter-spacing: 5px;
+            margin: 55px 0 !important;
+        }
+
+        .scene-break {
+            text-align: center;
+            color: #6f555e;
+            letter-spacing: 8px;
+            margin: 45px 0;
+        }
+
+        .censored {
+            color: #d34b65;
+            letter-spacing: 3px;
+        }
+
+        .story-note {
+            color: #a99ba0;
+            font-style: italic;
+            padding: 15px 18px;
+            margin: 28px 0;
+            border-left: 1px solid #6f555e;
+            background: #111116;
+        }
+
+        /* FINISHED BUTTON */
+
+        #finishedButton {
+            display: block;
+            margin: 70px auto 30px;
+            padding: 15px 42px;
+            color: #d34b65;
+            background: transparent;
+            border: 1px solid #d34b65;
+            font-family: Georgia, serif;
+            font-size: 14px;
+            letter-spacing: 4px;
+            cursor: pointer;
+            transition: background 0.25s, color 0.25s;
+        }
+
+        #finishedButton:hover {
+            background: #d34b65;
+            color: #0b0b0f;
+        }
+
+        /* CINEMATIC ENDING */
+
+        #ending-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: none;
+            overflow: hidden;
+            background: #000;
+
+            /* FIX: Start transparent so the ending can fade in. */
+            opacity: 0;
+            transition: opacity 1.2s ease;
+        }
+
+        #ending-screen.active {
+            display: block;
+        }
+
+        /* Fade in after the screen becomes visible. */
+        #ending-screen.active.fade-in {
+            opacity: 1;
+        }
+
+        /* Fade out takes priority when returning. */
+        #ending-screen.active.fade-out {
+            opacity: 0;
+            transition: opacity 1.2s ease;
+        }
+
+        .ending-line {
+            position: absolute;
+            width: min(80%, 720px);
+            color: #fff;
+            font-size: clamp(18px, 3vw, 27px);
+            line-height: 1.7;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1.2s ease, color 2s ease;
+        }
+
+        .ending-line.show {
+            opacity: 1;
+        }
+
+        .ending-line.gray {
+            color: #777;
+        }
+
+        #ending1 {
+            top: 20%;
+            left: 10%;
+        }
+
+        #ending2 {
+            top: 38%;
+            right: 10%;
+        }
+
+        #ending3 {
+            top: 55%;
+            left: 10%;
+        }
+
+        #ending4 {
+            top: 70%;
+            right: 10%;
+        }
+
+        #endingNarration {
+            top: 45%;
+            left: 10%;
+            width: 80%;
+            font-style: italic;
+        }
+
+        #smiledWord {
+            color: inherit;
+            transition: color 1s ease;
+        }
+
+        #endingThought {
+            top: 46%;
+            left: 10%;
+            width: 80%;
+            color: #fff;
+            font-style: italic;
+        }
+
+        #endingThought.crimson {
+            color: #d34b65;
+        }
+
+        #completionBox {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: min(85%, 430px);
+            padding: 35px 20px;
+            border: 1px solid #d34b65;
+            text-align: center;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.2s ease;
+        }
+
+        #completionBox.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #completionBox h2 {
+            color: #d34b65;
+            font-size: 24px;
+            font-weight: normal;
+            letter-spacing: 3px;
+        }
+
+        #returnButton {
+            position: absolute;
+            bottom: 9%;
+            left: 50%;
+            padding: 13px 35px;
+            color: #d34b65;
+            background: transparent;
+            border: 1px solid #d34b65;
+            font-family: Georgia, serif;
+            letter-spacing: 4px;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-50%);
+            transition: opacity 1s ease, background 0.25s;
+        }
+
+        #returnButton.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #returnButton:hover {
+            background: #302027;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+            #storyContent {
+                padding: 45px 19px;
+            }
+
+            .story-scene {
+                margin-bottom: 65px;
+            }
+
+            .story-scene p {
+                font-size: 16px;
+                line-height: 1.85;
+            }
+
+            .ending-line {
+                width: 84%;
+                left: 8% !important;
+                right: auto !important;
+            }
+
+            #ending1 {
+                top: 15%;
+            }
+
+            #ending2 {
+                top: 33%;
+            }
+
+            #ending3 {
+                top: 52%;
+            }
+
+            #ending4 {
+                top: 70%;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            #titleScreen h1,
+            .title-divider,
+            #titleScreen p,
+            #titleScreen .started {
+                animation-duration: 0.01ms;
+                animation-delay: 0ms;
+            }
+
+            #titleScreen {
+                transition-duration: 0.01ms;
+            }
+        }
+    </style>
+</head>
+
+<body class="no-scroll">
+
+    <!-- OPENING TITLE SCREEN -->
+
+    <div id="titleScreen">
+        <h1>The Crimson and The Ashen</h1>
+        <div class="title-divider"></div>
+        <p>CHAPTER I</p>
+        <div class="started">STARTED</div>
+    </div>
+
+    <!-- CHAPTER CONTENT -->
+
+    <main id="storyContent">
+        <div class="story-container">
+
+            <header class="chapter-heading">
+                <div class="eyebrow">THE CRIMSON AND THE ASHEN</div>
+                <h1>Chapter I</h1>
+                <div class="divider"></div>
+                <p>Still Working for bad grammars. To be polished soon.</p>
+            </header>
+
+            <!-- SCENE 1 -->
+
+            <section class="story-scene">
+                <h2>Scene 1 — The Lady's Disappointment</h2>
+
+                <div class="scene-setting">
+                    Inside the fortress, as a storm grows stronger.
+                </div>
+
+                <p>Yomisiah sits quietly, seemingly disappointed. Generousa approaches her.</p>
+
+                <div class="story-dialogue">
+                    <strong>Generousa</strong>
+                    <p>“My lady. Any progress so far?”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Yomisiah</strong>
+                    <p>“Hmm…”</p>
+                </div>
+
+                <p>Ferro walks in.</p>
+
+                <div class="story-dialogue">
+                    <strong>Ferro</strong>
+                    <p>“Apologies, Lord La Jolla. My lady is not in the mood right now. The storm is getting stronger and colder. Let us go back and rest…”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Generousa</strong>
+                    <p>“Hmm… Is that so? Much obliged, then, my lady…”</p>
+                </div>
+
+                <p>This opening creates an immediate question: What are they searching for, and why is Yomisiah so disappointed?</p>
+
+                <p>You don't have to reveal the answer immediately.</p>
+            </section>
+
+            <!-- SCENE 2 -->
+
+            <section class="story-scene">
+                <h2>Scene 2 — The Other Side</h2>
+
+                <div class="scene-setting">
+                    Elsewhere, several employees are discussing the situation while working.
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Employee 1</strong>
+                    <p>“Did they find it?”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Employee 2</strong>
+                    <p>“No idea. The look on Her Majesty's face is kind of… disappointing.”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Employee 3</strong>
+                    <p>“SHHH! Cut ya yappings at work, guys. WORK!”</p>
+                </div>
+
+                <p>This brief exchange gives employee's a glimpse of what's happening outside the conversation.</p>
+
+                <p>It also adds a little personality and humor before the heavier discussion.</p>
+            </section>
+
+            <!-- SCENE 3 -->
+
+            <section class="story-scene">
+                <h2>Scene 3 — The Grand Sovereigns' Conversation</h2>
+
+                <p>The Grand Sovereigns discuss the absence of their deceased colleague.</p>
+
+                <div class="story-dialogue">
+                    <strong>Fasha</strong>
+                    <p>“It appears he did not make it… Poor <span class="censored">*****</span>.”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Akhazel</strong>
+                    <p>“The Grand Sovereigns are now incomplete… It appears he died in some sort of battle. I can sense it… the frustration of my lady…”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Ferro</strong>
+                    <p>“<span class="censored">*****</span> is a weakling. I cannot believe he gained the position of the Fourth Grand despite how utterly poor his talents are.
+                    Now that the Grand Sovereigns are incomplete, we shall discuss how we recruit another fool to take that title…”</p>
+                </div>
+
+                <p>He pauses, considering the vacancy.</p>
+
+                <div class="story-dialogue">
+                    <strong>Ferro</strong>
+                    <p>“Or perhaps… I can take the Fourth title… Hmm?”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Fasha</strong>
+                    <p>“Hmph… Audacious.”</p>
+                </div>
+
+                <p>Generousa walks in.</p>
+
+                <div class="story-dialogue">
+                    <strong>Generousa</strong>
+                    <p>“Perhaps… I can find someone who can take the Fourth Grand title…”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Ferro</strong>
+                    <p>“…”</p>
+                </div>
+
+                <p>Ferro remains silent.</p>
+
+                <p class="story-note">That final silence is a strong place to end the scene. Ferro was openly considering taking the vacant title himself, but Generousa's proposal interrupts him.</p>
+
+                <p class="story-note">We don't yet know whom Generousa has in mind.</p>
+            </section>
+
+            <!-- SCENE 4 -->
+
+            <section class="story-scene">
+                <h2>Scene 4 --- The Lady's Orders</h2>
+
+                <p>Yomisiah privately gives Generousa an order.</p>
+
+                <div class="story-dialogue">
+                    <strong>Yomisiah (whispering to Generousa)</strong>
+                    <p>“Inform the Captain of the Prime Sovereign.... Give him my word..”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Generousa</strong>
+                    <p>“Understood my lady..”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Yomisiah</strong>
+                    <p>“Take Lord Ferro with you... I want you to observe the Prime Sovereigns properly... I hate Dissapointments...”</p>
+                </div>
+
+                <p>Generousa turns toward Ferro.</p>
+
+                <div class="story-dialogue">
+                    <strong>Generousa</strong>
+                    <p>“You know what to do... Lord Ferro. Observe the Primes...”</p>
+                </div>
+
+                <p>Generousa blinks rapidly and disappears.</p>
+
+                <div class="story-dialogue">
+                    <strong>Ferro</strong>
+                    <p>“Don't Order me like i am a peasant to you... Lord La Jolla.. (Smirks.)</p>
+                </div>
+
+                <p>Ferro slowly fades.</p>
+
+                <p>Yomisiah is setting something in motion. Her private message to the Captain of the Prime Sovereigns suggests that the vacant Grand title is connected to a larger decision.</p>
+
+                <p>Generousa has a mission. She's expected to observe the Prime Sovereigns, with Ferro accompanying him.</p>
+
+                <p>Ferro's pride is showing. Even while following the order, he resents the way Generousa speaks to him.</p>
+
+                <p>The Fourth Grand vacancy remains unresolved. We still don't know who will eventually take that title, and the deceased Sovereign's identity remains secret.</p>
+            </section>
+
+            <!-- SCENE 5 -->
+
+            <section class="story-scene">
+                <h2>Scene 5 — The Remaining Grand Sovereigns</h2>
+
+                <p>At the same location, after Ferro slowly fades away, Akhazel and Fasha continue their conversation.</p>
+
+                <div class="story-dialogue">
+                    <strong>Akhazel</strong>
+                    <p>“Ahh, the Prime Ranks... What could my lady be plotting with the lower ranks?...”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Fasha</strong>
+                    <p>“Hmph, why ask me about that? It is my lady's word of thinking..”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Akhazel</strong>
+                    <p>“Lord Ferro seems a bit mad on Lord Generousa... I wonder why...”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Fasha</strong>
+                    <p>“Lord Ferro has been this all day to gain that fourth title... How audacious.”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Akhazel</strong>
+                    <p>“Hmm...”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Fasha</strong>
+                    <p>“What's on your mind? Lord Akhazel...”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Akhazel</strong>
+                    <p>“Nothing much, really... I must go now, I have some important.... Plans to begin with...”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Fasha</strong>
+                    <p>“Hmph...”</p>
+                </div>
+
+                <p class="story-note">* A moment of silence follows as Akhazel leaves.* Akhazel leaves to begin his undisclosed plans.</p>
+
+                <p>Ferro openly wants the vacant Fourth Grand title, but Akhazel also has plans he isn't willing to explain. Meanwhile, Yomisiah has ordered Generousa to observe the Prime Sovereigns.</p>
+            </section>
+
+            <!-- SCENE 6 -->
+
+            <section class="story-scene">
+                <h2>Scene 6 --- THE PRIME SOVEREIGNS</h2>
+
+                <p>Inside the Prime Sovereigns' domain, Rugal walks back and forth, visibly frustrated.</p>
+
+                <div class="story-dialogue">
+                    <strong>Rugal</strong>
+                    <p>“This cannot be, How... How could the <span class="censored">*&amp;^%^</span> is not revealing yet... It is been over decades since its descend.. How...”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Fujireto</strong>
+                    <p>“In my theory Lord Rugal... It could take up to 5 or more decades until it manifest hmm?”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Rugal</strong>
+                    <p>“sigh If it takes another decades for this to reveal its secret we can research it...And to find a way to destroy the Supreme Judgement Syndicates... This cannot go to waste...”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Fujireto</strong>
+                    <p>“But what about the Sixth Prime? WHo can we recruit in this time's madness?”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Rugal</strong>
+                    <p>“Well.. That is my job to take..”</p>
+                </div>
+
+                <p>Alexius enters the room.</p>
+
+                <div class="story-dialogue">
+                    <strong>Alexius</strong>
+                    <p>“Captain! Permission!. The fifth Grand Sovereign is within our domain...”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Rugal</strong>
+                    <p>“Lord Ferro... What is he up to..”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Alexius</strong>
+                    <p>“He is kinda... in a very very.. Iritated..hmmm Care to walk through and uhhh- Talk? hehe”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Fujireto</strong>
+                    <p>“What could be my lady is planning Lord Rugal?”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Rugal</strong>
+                    <p>“....”</p>
+                </div>
+
+                <p class="story-note">The unknown phenomenon: Something descended decades ago, but its secret still hasn't been revealed. We don't know what it is.</p>
+
+                <p class="story-note">The Syndicate conflict: Rugal wants to investigate it and find a way to destroy the Supreme Judgment Syndicate.</p>
+
+                <p class="story-note">The Sixth Prime vacancy which Rugal considers recruiting someone to fill the position.</p>
+
+                <p class="story-note">Ferro's arrival at The V Grand Sovereign has entered the Prime Sovereigns' domain, apparently irritated.</p>
+
+                <p class="story-note">Fujireto wonders what his lady is planning, but Rugal gives no answer.</p>
+
+                <p>The Grand Sovereigns are observing the Prime Sovereigns, while the Prime Sovereigns are wondering what Yomisiah has planned. Both sides have unanswered questions about the other.</p>
+            </section>
+
+            <!-- SCENE 7 -->
+
+            <section class="story-scene">
+                <h2>Scene 7 --- A Traitor within the Authority</h2>
+
+                <div class="scene-setting">
+                    Somewhere in the Sky… A floating realm within…
+                </div>
+
+                <p>Following Regina's departure from the Supreme Judgement Syndicate, the remaining Authorities discuss her decision.</p>
+
+                <p class="story-year">THE SUPREME JUDGEMENT SYNDICATE</p>
+
+                <div class="story-dialogue">
+                    <strong>Aethel</strong>
+                    <p>So… She left…? I was wondering why she could leave the title of the Authority…</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Veritas</strong>
+                    <p>Who knows, Maybe she loved that one human who ruled an empire…</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Aethel</strong>
+                    <p>The Haslettian Empire?… What would she thinking…</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Ostraea</strong>
+                    <p>There… is only, One answer…</p>
+                </div>
+
+                <p>Ostraea pauses for a moment.</p>
+
+                <div class="story-dialogue">
+                    <strong>Ostraea</strong>
+                    <p>She Betrayed us…</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deisha</strong>
+                    <p>So what should we do then? Let her be?.. Falling inlove with a wretched creature down there?</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Ostraea</strong>
+                    <p>Oh. What would you think then? Miss Deisha…</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deisha</strong>
+                    <p>I say… We slay the traitor…</p>
+                </div>
+
+                <p>Aethel and Veritas remain silent.</p>
+
+                <p>Ostraea looks up and sits.</p>
+
+                <div class="story-dialogue">
+                    <strong>Ostraea</strong>
+                    <p>Do as you wish then…</p>
+                </div>
+
+                <p>Ostraea doesn't directly order Regina's death. She leaves the decision to Deisha, which makes the scene feel more like a judgment being permitted than an execution being commanded.</p>
+            </section>
+
+            <!-- SCENE 8 -->
+
+            <section class="story-scene">
+                <h2>Scene 8 --- The Snowstorm</h2>
+
+                <div class="scene-setting">
+                    Somewhere at the storm... A hooded figure is walking.... It rages across the snow-covered land of Eldoria.
+                </div>
+
+                <p>After leaving her position as an Authority, Reina Tomoe walks alone through a snowstorm. Her weakened Abyssal powers prevent her from blinking away from the storm.</p>
+
+                <p>Reina walked through the blizzard, enduring the biting cold as snow swept past her. Her Abyssal Powers had weakened considerably. She could no longer blink or dash away from the storm.</p>
+
+                <p>Her legs trembled with every step. Her breathing grew weaker.</p>
+
+                <p>Eventually, she could no longer keep herself standing.</p>
+
+                <p>Thud.</p>
+
+                <p>Reina collapsed onto the snow.</p>
+
+                <p>She slowly lifted her gaze toward the storming sky, struggling to remain conscious.</p>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>“Will... this... change my life...? Leaving my... title as the Authority…. Deishreth.. i can’t.. die here… “</p>
+                </div>
+
+                <p>Several seconds passed.</p>
+
+                <p>Then, a strange vibration echoed through the snow.</p>
+
+                <p>The snow began to shift, slowly moving away as something—or someone—approached her.</p>
+
+                <p>A figure emerged through the blizzard.</p>
+
+                <p>It was King Deishreth.</p>
+
+                <p>He had found her.</p>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“Found you…”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>So...*faint cough*.. You found me...</p>
+                </div>
+
+                <p>She gives a faint smirk and smile before losing consciousness.</p>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>Sorry for being late, my love...You can rest while I bash through this storm and get the hell out of here...</p>
+                </div>
+            </section>
+
+            <!-- SCENE 9 -->
+
+            <section class="story-scene">
+                <h2>Scene 9 — The King's Private Room</h2>
+
+                <p>Twenty-one minutes later, they return to Eldoria. Reina is brought to the King's private room, where Deishreth uses warm water to help normalize her body temperature.</p>
+
+                <p>Eventually, Reina awakens.</p>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>Ah... So you're awake now.</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>W-where am I?</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>Don't panic. This room is my only private space. No people or guard enters here...</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>(Grunts.) Okay, that hurt... How long was I walking through the storm?</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>Can't say. Maybe fifty minutes..But hey, good thing I found you back then. If I hadn't, you could have been preserved in ice out there... slowly dying...</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>Hmph...</p>
+                </div>
+            </section>
+
+            <!-- SCENE 10 -->
+
+            <section class="story-scene">
+                <h2>Scene 10 — Why Would You Risk Yourself?</h2>
+
+                <p>Reina looks at Deishreth, questioning his decision to search for her.</p>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>Why would you risk yourself for me...?</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>I don't know. Maybe I can't live without you...</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>Okay, you won't get me with those words.</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>Haha! That didn't work, huh...?</p>
+                </div>
+
+                <p>She appears to be annoyed at first but.. smiled a little. . .</p>
+
+                <p>Reina walks a little farther and looks toward the night sky.</p>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>Say... The wind seems a bit freezing up here. Won't you get sick while sleeping beside an open window?</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>Well... I do close it sometimes, but the faint light of the night comforts me, so...</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>Oh...</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>Anyways, tomorrow I'll get you some clothes. You can't dress in your, uh... Authority outfit in public. My people will notice, and we'll both get screwed...</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>Hmph...</p>
+                </div>
+            </section>
+
+            <!-- SCENE 11 -->
+
+            <section class="story-scene">
+                <h2>Scene 11 — A Different Life</h2>
+
+                <p>Deishreth asks Reina about her former position and why she chose to leave it behind.</p>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>So, why did you become part of the Authority and then banish yourself from it?</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>Hard to explain, Deishreth...All these years ruling over the world... I... I wanted to live differently...I'm not a human like you... I am a cursed woman who possesses dangerous powers...I want to live happily and end this madness... It is too much for me...</p>
+                </div>
+
+                <p>Deishreth falls silent for a moment before approaching her.</p>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>So you wanted to live peacefully like the others, huh...? Well...Why not stay here?</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>Risky move, King... Deishreth... You know I'm a monster...</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>The others may think so, but in my eyes, you're not.</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>...?</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>You're as beautiful as the day we first met...</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>Hmm... That battle ten years ago? The time our eyes met?</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>Hehehe...</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>You are one weird human I've met. Thank me that I didn't kill you.</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>Oh, I would love to kneel before you.</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>DEISHRETHHH!!! ARRGH! You're annoying... Hmph!</p>
+                </div>
+
+                <p>Both laugh.</p>
+
+                <p>The point of view moves away from them and toward the night sky, where the bright moon shines above Eldoria.</p>
+
+            </section>
+
+            <!-- SCENE 12 -->
+
+            <section class="story-scene">
+                <h2>Scene 12 — The Authority of Scarlet</h2>
+                <p class="story-year">Year 305</p>
+
+                <div class="story-dialogue">
+                    <strong>Aethel</strong>
+                    <p>Any signs of the Authority of Scarlet?</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Aethel</strong>
+                    <p>Well, I do have some... Miss Ostraea, may I have permission to speak?</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Ostraea</strong>
+                    <p>Go on...</p>
+                </div>
+
+                <p>Aethel stands firmly before the other Authorities.</p>
+
+                <div class="story-dialogue">
+                    <strong>Aethel</strong>
+                    <p>I can confirm that the Authority of Scarlet was last seen in the raging storm, not far from the nation called Eldoria...</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Veritas</strong>
+                    <p>So she did leave her title as an Authority? That's a shame...</p>
+                </div>
+
+                <p>She's the only one among us who had two titles in her position. I can't say it's not a pity...</p>
+
+                <div class="story-dialogue">
+                    <strong>Deisha</strong>
+                    <p>So... What would be the plan?</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Ostraea</strong>
+                    <p>Let's give her a few more years to enjoy her life within the human realm...</p>
+                </div>
+
+                <p>And then you strike, Deisha. From that moment...</p>
+
+                <p>Everyone looks toward Ostraea.</p>
+
+                <div class="story-dialogue">
+                    <strong>Ostraea</strong>
+                    <p>Give me her head...</p>
+                </div>
+
+                <p>An object for betraying her oath as an Authority of Scarlet and Obsidian Tide...</p>
+
+                <div class="story-dialogue">
+                    <strong>Veritas</strong>
+                    <p>Huhuhu... Scary...</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Aethel</strong>
+                    <p>Tsk...</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deisha</strong>
+                    <p>Understood, Miss Ostraea...</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Ostraea</strong>
+                    <p>This session is dismissed...</p>
+                </div>
+
+            </section>
+
+            <!-- SCENE 13 -->
+
+            <section class="story-scene">
+
+                <p class="story-note">A FUTURE IS TRIGGERED WITHIN THE STORY...</p>
+
+                <p>A faint image appears: Reina Tomoe, weakened and in a state of near death.</p>
+
+                <h2>Scene 13 — The Ruins of Eldoria</h2>
+                <p class="story-year">Year: Glitches</p>
+
+                <p>The battlefield is devastated. Debris lies everywhere, and the surrounding houses have been fatally damaged.</p>
+
+                <p>Reina is gravely wounded. Her strength has nearly vanished after attempting to fight back against Deisha, the Authority of Dark.</p>
+
+                <p>Nearby, young Jin cries beside his dying mother.</p>
+
+                <p>Rin has already been abducted by Deisha.</p>
+
+                <div class="story-dialogue">
+                    <strong>Jin</strong>
+                    <p>Mom!!! Mom!!!</p>
+                </div>
+
+                <p>Jin desperately calls for help as Reina struggles to remain conscious.</p>
+
+                <p>The sound of rushing horses approaches. King Deishreth finally arrives.</p>
+
+                <p>The image blurs. Their final conversation can only faintly be heard.</p>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>I-... was happier than-... ever when...</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Jin</strong>
+                    <p>Mom!!! Mom!!!</p>
+                </div>
+
+                <p>Jin continues crying.</p>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>When-... we first met... you-... you changed me...</p>
+                </div>
+
+                <p>Her voice fades, but she continues speaking.</p>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>You made me understand how the world works... You stole me away from this solitude...Please... say it once more... but-...</p>
+                </div>
+
+                <p>Reina reaches out her hand toward Deishreth.</p>
+
+                <p>Deishreth stands firmly, holding young Jin. He kneels beside Reina while carrying their child.</p>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>But properly...</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>You got it...</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>Someday... I will take you......</p>
+                </div>
+
+                <p>Reina's vision fades. She can barely hear him, and her body stops responding before he can finish his sentence.</p>
+
+                <p>Deishreth Continues to speak.</p>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>to a place we always talk about...</p>
+                </div>
+
+                <p>Reina dies peacefully, smiling at Deishreth.</p>
+
+                <p>Young Jin continues crying and tries to reach his dead mother.</p>
+
+                <p>Deishreth opens his eyes, faintly crying.</p>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>L-Let me finish it... Damn it...</p>
+                </div>
+
+                <p>The image blurs and fades away.</p>
+
+                <p class="story-year">YEAR: UNKNOWN.</p>
+            </section>
+
+            <!-- SCENE 14 -->
+
+            <section class="story-scene">
+                <h2>Scene 14 — The Nightmare</h2>
+
+                <p>Inside the window-side area of King Deishreth's private room, Reina appears to be sweating and struggling in her sleep.</p>
+
+                <p>Moments later, she awakens.</p>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>“AAAAAAAAAAHH—! …What…?”</p>
+                </div>
+
+                <p>Tears slowly stream from her eyes as she screams.</p>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>“Wha—… What a terrible dream…”</p>
+                </div>
+
+                <p>A faint sound of running can be heard outside. It grows louder and louder.</p>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“U… UUUUAAARRGHHHHHH! WHO'S OUT THERE?! COME OUT!!!”</p>
+                </div>
+
+                <p>He swings his sword as he shouts.</p>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“YOU MANIACS!!! YOU DARE THREATEN MY— Uhh…”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>“Uhh…”</p>
+                </div>
+
+                <p>Deishreth turns around and notices Reina is awake.</p>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“Ohhhh! Hey there! You're awake! So, how's the bed?” He smiles.</p>
+                </div>
+
+                <p>Reina is speechless. She quickly wipes her eyes, trying to hide her tears from the King.</p>
+
+                <p>Deishreth notices.</p>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“Ohhh… Was your dream… sort of terrible?”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>“Sniff… N-no… I—uh… I'm fine…”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“If you need anything, just let me know, okay?”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>“Hmm…”</p>
+                </div>
+
+                <p>A voice calls from beyond the private room's door.</p>
+
+                <div class="story-dialogue">
+                    <strong>Unknown Peasant</strong>
+                    <p>“My King! Sorry for interrupting, but the guests have arrived…”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“Talk about timing… IN A MINUTE!!!”</p>
+                </div>
+
+                <p>Reina looks at Deishreth.</p>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>“Guests…?”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“Hehe, yeah. A guest who has a connection to finding my niece…”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>“Niece? Who could it be?”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“Ehhh… It's a long story. She left this nation probably a decade ago, or… Argh, I don't know…”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>“Any reason she left? I'm just curious…”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“We can talk about it later, hehehe. Just stay here.”</p>
+                </div>
+
+                <p>Deishreth stands up and takes his sword back.</p>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“And, uh… apologize for the… eh, for interrupting your presence. You screamed, so I just… ran for it, hehe.”</p>
+                </div>
+
+                <p>Reina looks confused for a moment before realizing what happened.</p>
+
+                <div class="story-dialogue">
+                    <strong>Reina (thinking)</strong>
+                    <p class="story-thought">“Did I… scream too loudly that time? …No way…”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Reina</strong>
+                    <p>“Y-yeahhh… It's alright…”</p>
+                </div>
+            </section>
+
+            <!-- SCENE 15 -->
+
+            <section class="story-scene">
+                <h2>Scene 15 — The King's Niece</h2>
+
+                <p>The scene shifts to a meeting hall where the human guests have arrived. Guards stand firmly in the background, awaiting the King's arrival.</p>
+
+                <p>The guests have arrived...</p>
+
+                <p>Meanwhile, inside King Deishreth's wardrobe room...</p>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“Ohhh, damn it! Where's my red necktie?! Arghhh, where is it?!”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Maid 1</strong>
+                    <p>“My lord... Having trouble finding your clothes?”</p>
+                </div>
+
+                <p>Deishreth continues rummaging frantically through his wardrobe.</p>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“Uh, yeahhh! Have you seen my red necktie?”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Maid 1</strong>
+                    <p>“Ohhh, your red necktie, my lord? It appears that Ms. Varesa took it and put it in the laundry...”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“You said... WHAT?!”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Maid 1</strong>
+                    <p>“Ahhh! I'm sorry, my lord!!!”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“WHERE IS SHE?!”</p>
+                </div>
+
+                <p>Meanwhile, in the laundry room, Ms. Varesa is sitting comfortably and reading a book while the King's precious red necktie is being demolished inside the washing machine.</p>
+
+                <p>Deishreth arrives.</p>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“YOUUU!! WHY WOULD YOU—?!”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Varesa</strong>
+                    <p>“Ohhh, greetings, my lord! Uhh, what brings you here?”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“MY RED... NECK... TIEEE! WHERE IS IT?!”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Varesa</strong>
+                    <p>“Ohhh, that one?”</p>
+                </div>
+
+                <p>Varesa points toward the washing machine.</p>
+
+                <p>Deishreth opens it and searches for his necktie. Instead, he accidentally grabs something else.</p>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“Found it!! Uhh... oops.”</p>
+                </div>
+
+                <p>He freezes.</p>
+
+                <p>A pink pair of women's underwear.</p>
+
+                <p>Deishreth is shocked, his face turning bright red. A maid standing in the background witnesses the scene and looks equally shocked, her cheeks turning red as well.</p>
+
+                <div class="story-dialogue">
+                    <strong>Varesa</strong>
+                    <p>“Uhh, ohhh... My lord's a perv, pervyyyy!”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“No, nooo! You guys misunderstood! I was looking for my necktIEEE!!!”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth (thinking)</strong>
+                    <p class="story-thought">“WHY IS THIS HAPPENING TO MEEEE!!!!!”</p>
+                </div>
+
+                <div class="scene-break">* * *</div>
+
+                <p class="story-year">Later — The Meeting Hall</p>
+
+                <p>The guests continue waiting for the King.</p>
+
+                <div class="story-dialogue">
+                    <strong>Unknown Guest 1</strong>
+                    <p>“He's late...”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Guard 1</strong>
+                    <p>“My lord will be here in a minute.”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Unknown Guest 1</strong>
+                    <p>“Just go to him. Immediately.”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Guard 1</strong>
+                    <p>“Learn to wait, sire. He will be here soon.”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Unknown Guest 1</strong>
+                    <p>“Grunts... Tsk.”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Unknown Guest 2</strong>
+                    <p>“Easy there, now... Just learn to wait, won't you?”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Unknown Guest 1</strong>
+                    <p>“Tsk... Whatever...”</p>
+                </div>
+
+                <p>The door opens.</p>
+
+                <p>King Deishreth enters the meeting hall. He walks properly, maintaining his royal composure despite the irritation on his face.</p>
+
+                <p>He takes his seat.</p>
+
+                <div class="story-dialogue">
+                    <strong>Unknown Guest 2</strong>
+                    <p>“Greetings, Lord Deishreth—uhh, what happened to you?”</p>
+                </div>
+
+                <p>A reddish handprint is visible on the left side of Deishreth's face, as though he had been slapped. Nevertheless, he maintains his firm posture.</p>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“This? This is nothing.”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Unknown Guest 2</strong>
+                    <p>“...Okay then, Lord Deishreth.”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Unknown Guest 1</strong>
+                    <p>“So... you finally arrived. I expected less from you, King Deishreth, but... look at this place.”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“Much obliged, dear guests. So... anything about my niece?”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Unknown Guest 2</strong>
+                    <p>“Good thing you asked. In fact, we have evidence and information about her whereabouts. However, we haven't confirmed it yet.”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“Ohhh? I would love to hear it.”</p>
+                </div>
+
+                <p>Unknown Guest 2 opens his bag and takes out a map and several documents. He points out her unconfirmed whereabouts and other pieces of information.</p>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“In the nation of Valeria...?”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Unknown Guest 2</strong>
+                    <p>“We haven't confirmed everything yet, but some of our men have confirmed that she's one of the...”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“Hmm...”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Unknown Guest 1</strong>
+                    <p>“Primes... A lower rank within the Yomi Sovereignty.”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“The Yomi Sovereignty...”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Unknown Guest 2</strong>
+                    <p>“Indeed. She's currently in the position of Prime II.”</p>
+                </div>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth</strong>
+                    <p>“Fasha...”</p>
+                </div>
+
+                <p>The scene changes.</p>
+
+                <p>In Valeria, Fasha stands among the Prime Sovereigns, gazing toward the hall.</p>
+
+                <p>Her figure appears faintly on the screen.</p>
+
+                <div class="story-dialogue">
+                    <strong>Deishreth (voice-over)</strong>
+                    <p>“What happened to you...”</p>
+                </div>
+
+                <p>The King's words linger as Fasha's faint appearance remains on the screen, revealing her position as a Prime Sovereign.</p>
+            </section>
+
+            <!-- CHAPTER END -->
+
+            <div class="chapter-heading">
+                <div class="divider"></div>
+                <p>End of Chapter I</p>
+            </div>
+
+            <button id="finishedButton" type="button">FINISHED</button>
+
+        </div>
+    </main>
+
+    <!-- CINEMATIC ENDING SCREEN -->
+
+    <section id="ending-screen" aria-label="Chapter ending">
+
+        <div class="ending-line" id="ending1">
+            Why would you risk yourself for me...?
+        </div>
+
+        <div class="ending-line" id="ending2">
+            I don't know. Maybe I can't live without you...
+        </div>
+
+        <div class="ending-line" id="ending3">
+            Okay, you won't get me with those words.
+        </div>
+
+        <div class="ending-line" id="ending4">
+            Haha! That didn't work, huh...?
+        </div>
+
+        <div class="ending-line" id="endingNarration">
+            She appears to be annoyed at first but.. <span id="smiledWord">smiled</span> a little. . .
+        </div>
+
+        <div class="ending-line" id="endingThought">
+            (I wish this would last forever.....)
+        </div>
+
+        <div id="completionBox">
+            <h2>Chapter 1 Complete</h2>
+        </div>
+
+        <button id="returnButton" type="button">RETURN</button>
+
+    </section>
+
+    <script>
+        const titleScreen = document.getElementById("titleScreen");
+        const storyContent = document.getElementById("storyContent");
+        const endingScreen = document.getElementById("ending-screen");
+
+        /*
+         * OPENING SEQUENCE
+         * Opening animation plays for 6.5 seconds.
+         * STARTED animates independently through CSS.
+         */
+
+        window.addEventListener("load", () => {
+            window.setTimeout(() => {
+                titleScreen.classList.add("fade-out");
+                storyContent.classList.add("story-visible");
+                document.body.classList.remove("no-scroll");
+
+                window.setTimeout(() => {
+                    titleScreen.remove();
+                }, 1600);
+            }, 6500);
+        });
+
+        /*
+         * STORY BEHAVIOR
+         * No automatic scene changes.
+         * No typing effects.
+         * No forced scrolling.
+         */
+
+        const wait = (ms) =>
+            new Promise(resolve => window.setTimeout(resolve, ms));
+
+        async function revealDialogue(id, duration = 1700) {
+            const element = document.getElementById(id);
+
+            element.classList.add("show");
+
+            await wait(duration);
+
+            element.classList.add("gray");
+        }
+
+        async function finishChapter() {
+            if (endingScreen.classList.contains("active")) {
+                return;
+            }
+
+            endingScreen.classList.add("active");
+            document.body.classList.add("no-scroll");
+
+            /*
+             * FIX: Wait for the browser to render the transparent screen
+             * before adding fade-in. This allows the CSS transition to run.
+             */
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    endingScreen.classList.add("fade-in");
+                });
+            });
+
+            await revealDialogue("ending1");
+            await wait(300);
+
+            await revealDialogue("ending2");
+            await wait(300);
+
+            await revealDialogue("ending3");
+            await wait(300);
+
+            await revealDialogue("ending4");
+            await wait(800);
+
+            /*
+             * Fade out earlier dialogue before narration.
+             */
+
+            ["ending1", "ending2", "ending3", "ending4"].forEach(id => {
+                document.getElementById(id).style.opacity = "0";
+            });
+
+            await wait(1200);
+
+            const narration = document.getElementById("endingNarration");
+            const smiledWord = document.getElementById("smiledWord");
+
+            narration.classList.add("show");
+
+            await wait(1800);
+
+            narration.classList.add("gray");
+
+            await wait(2100);
+
+            smiledWord.style.color = "#fff";
+
+            await wait(1600);
+
+            narration.style.opacity = "0";
+
+            await wait(1300);
+
+            const thought = document.getElementById("endingThought");
+
+            thought.classList.add("show");
+
+            await wait(1200);
+
+            thought.classList.add("crimson");
+
+            await wait(2500);
+
+            thought.style.opacity = "0";
+
+            await wait(1400);
+
+            document.getElementById("completionBox")
+                .classList.add("show");
+
+            await wait(1800);
+
+            document.getElementById("returnButton")
+                .classList.add("show");
+        }
+
+        function returnToExpansions() {
+            endingScreen.classList.add("fade-out");
+
+            window.setTimeout(() => {
+                window.location.href = "expansions.html";
+            }, 1200);
+        }
+
+        document.getElementById("finishedButton")
+            .addEventListener("click", finishChapter);
+
+        document.getElementById("returnButton")
+            .addEventListener("click", returnToExpansions);
+    </script>
+
+</body>
+</html>
