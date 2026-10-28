@@ -1,0 +1,1608 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter I — The Crimson and The Ashen</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            background: #0b0b0f;
+            color: #e8e0e3;
+            font-family: Georgia, "Times New Roman", serif;
+        }
+
+        body.no-scroll { overflow: hidden; }
+
+        /* OPENING TITLE SCREEN */
+        #titleScreen {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: #000;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 1.5s ease, visibility 1.5s ease;
+        }
+
+        #titleScreen.fade-out {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        #titleScreen h1 {
+            color: #d34b65;
+            font-size: clamp(27px, 5vw, 48px);
+            font-weight: normal;
+            letter-spacing: 3px;
+            margin: 0 20px 22px;
+            opacity: 0;
+            animation: titleReveal 2s ease forwards;
+        }
+
+        .title-divider {
+            width: 150px;
+            height: 2px;
+            background: #d34b65;
+            margin-bottom: 22px;
+            transform: scaleX(0);
+            animation: dividerReveal 1.2s ease forwards;
+            animation-delay: 1s;
+        }
+
+        #titleScreen p {
+            color: #c8bfc3;
+            font-size: 17px;
+            letter-spacing: 6px;
+            opacity: 0;
+            animation: chapterReveal 1.5s ease forwards;
+            animation-delay: 1.5s;
+        }
+
+        #titleScreen .started {
+            color: #d34b65;
+            font-size: 13px;
+            letter-spacing: 5px;
+            margin-top: 45px;
+            opacity: 0;
+            animation: startedReveal 1.5s ease forwards;
+            animation-delay: 2.5s;
+        }
+
+        @keyframes titleReveal {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+                letter-spacing: 8px;
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                letter-spacing: 3px;
+            }
+        }
+
+        @keyframes dividerReveal {
+            to { transform: scaleX(1); }
+        }
+
+        @keyframes chapterReveal {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes startedReveal {
+            0% {
+                opacity: 0;
+                transform: translateY(12px);
+                letter-spacing: 10px;
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+                letter-spacing: 5px;
+            }
+        }
+
+        /* STORY */
+        #storyContent {
+            display: none;
+            min-height: 100vh;
+            padding: 65px 22px;
+            background: #0b0b0f;
+        }
+
+        #storyContent.story-visible { display: block; }
+
+        .story-container {
+            width: 100%;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        .chapter-heading {
+            text-align: center;
+            margin-bottom: 90px;
+        }
+
+        .chapter-heading .eyebrow {
+            color: #a99ba0;
+            letter-spacing: 5px;
+            font-size: 12px;
+        }
+
+        .chapter-heading h1 {
+            color: #d34b65;
+            font-weight: normal;
+            font-size: clamp(30px, 5vw, 43px);
+            margin: 20px 0;
+        }
+
+        .chapter-heading .divider {
+            width: 100px;
+            height: 2px;
+            background: #d34b65;
+            margin: 25px auto;
+        }
+
+        .chapter-heading p {
+            color: #a99ba0;
+            font-style: italic;
+        }
+
+        .story-scene {
+            margin-bottom: 85px;
+            padding-bottom: 45px;
+            border-bottom: 1px solid #302027;
+        }
+
+        .story-scene h2 {
+            color: #d34b65;
+            font-weight: normal;
+            font-size: clamp(23px, 4vw, 30px);
+            text-align: center;
+            margin: 0 0 15px;
+        }
+
+        .story-scene h3 {
+            color: #c58acb;
+            font-weight: normal;
+            text-align: center;
+            margin: 35px 0 20px;
+        }
+
+        .scene-setting {
+            color: #a99ba0;
+            font-style: italic;
+            text-align: center;
+            margin-bottom: 38px;
+        }
+
+        .story-scene p {
+            font-size: 17px;
+            line-height: 1.95;
+            margin: 20px 0;
+            overflow-wrap: anywhere;
+        }
+
+        .story-dialogue {
+            margin: 24px 0;
+            padding-left: 17px;
+            border-left: 2px solid #d34b65;
+        }
+
+        .story-dialogue strong {
+            display: block;
+            color: #d34b65;
+            font-size: 14px;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .story-dialogue p { margin: 0; }
+
+        .story-thought {
+            color: #c58acb;
+            font-style: italic;
+            margin: 25px 18px !important;
+        }
+
+        .story-year {
+            color: #d34b65;
+            text-align: center;
+            letter-spacing: 5px;
+            margin: 55px 0 !important;
+        }
+
+        .scene-break {
+            text-align: center;
+            color: #6f555e;
+            letter-spacing: 8px;
+            margin: 45px 0;
+        }
+
+        .censored {
+            color: #d34b65;
+            letter-spacing: 3px;
+        }
+
+        .story-note {
+            color: #a99ba0;
+            font-style: italic;
+            padding: 15px 18px;
+            margin: 28px 0;
+            border-left: 1px solid #6f555e;
+            background: #111116;
+        }
+
+        /* FINISHED BUTTON */
+        #finishedButton {
+            display: block;
+            margin: 70px auto 30px;
+            padding: 15px 42px;
+            color: #d34b65;
+            background: transparent;
+            border: 1px solid #d34b65;
+            font-family: Georgia, serif;
+            font-size: 14px;
+            letter-spacing: 4px;
+            cursor: pointer;
+            transition: background 0.25s, color 0.25s;
+        }
+
+        #finishedButton:hover {
+            background: #d34b65;
+            color: #0b0b0f;
+        }
+
+        /* CINEMATIC ENDING */
+        #ending-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            display: none;
+            overflow: hidden;
+            background: #000;
+            opacity: 0;
+            transition: opacity 1.2s ease;
+        }
+
+        #ending-screen.active { display: block; }
+        #ending-screen.active.fade-in { opacity: 1; }
+
+        #ending-screen.active.fade-out {
+            opacity: 0;
+            transition: opacity 1.2s ease;
+        }
+
+        .ending-line {
+            position: absolute;
+            width: min(80%, 720px);
+            color: #fff;
+            font-size: clamp(18px, 3vw, 27px);
+            line-height: 1.7;
+            text-align: center;
+            opacity: 0;
+            clip-path: inset(0 100% 0 0);
+            transition:
+                clip-path 2.2s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 1.1s ease,
+                color 2s ease;
+        }
+
+        .ending-line.show {
+            opacity: 1;
+            clip-path: inset(0 0 0 0);
+        }
+
+        .ending-line.gray { color: #777; }
+
+        #ending1 { top: 20%; left: 10%; }
+        #ending2 { top: 38%; right: 10%; }
+        #ending3 { top: 55%; left: 10%; }
+        #ending4 { top: 70%; right: 10%; }
+
+        #endingNarration {
+            top: 45%;
+            left: 10%;
+            width: 80%;
+            font-style: italic;
+        }
+
+        #smiledWord { color: inherit; transition: color 1s ease; }
+
+        #endingThought {
+            top: 46%;
+            left: 10%;
+            width: 80%;
+            color: #fff;
+            font-style: italic;
+            clip-path: none;
+            transition: opacity 3s ease, color 2s ease;
+        }
+
+        #endingThought.show { opacity: 1; }
+        #endingThought.crimson { color: #d34b65; }
+
+        #completionBox {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: min(85%, 430px);
+            padding: 35px 20px;
+            border: 1px solid #d34b65;
+            text-align: center;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 1.2s ease;
+        }
+
+        #completionBox.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #completionBox h2 {
+            color: #d34b65;
+            font-size: 24px;
+            font-weight: normal;
+            letter-spacing: 3px;
+        }
+
+        #returnButton {
+            position: absolute;
+            bottom: 9%;
+            left: 50%;
+            padding: 13px 35px;
+            color: #d34b65;
+            background: transparent;
+            border: 1px solid #d34b65;
+            font-family: Georgia, serif;
+            letter-spacing: 4px;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-50%);
+            transition: opacity 1s ease, background 0.25s;
+        }
+
+        #returnButton.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #returnButton:hover { background: #302027; }
+
+        @media (max-width: 600px) {
+            #storyContent { padding: 45px 19px; }
+            .story-scene { margin-bottom: 65px; }
+            .story-scene p { font-size: 16px; line-height: 1.85; }
+
+            .ending-line {
+                width: 84%;
+                left: 8% !important;
+                right: auto !important;
+            }
+
+            #ending1 { top: 15%; }
+            #ending2 { top: 33%; }
+            #ending3 { top: 52%; }
+            #ending4 { top: 70%; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+
+            #titleScreen h1,
+            .title-divider,
+            #titleScreen p,
+            #titleScreen .started {
+                animation-duration: 0.01ms;
+                animation-delay: 0ms;
+            }
+
+            #titleScreen { transition-duration: 0.01ms; }
+
+            .ending-line,
+            #endingThought,
+            #completionBox,
+            #returnButton {
+                transition-duration: 0.01ms;
+            }
+        }
+        
+/* FLOATING MUSIC CONTROL */
+#musicToggle {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 250;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    color: #d34b65;
+    background: rgba(11, 11, 15, 0.94);
+    border: 1px solid #d34b65;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 11px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: background 0.25s, color 0.25s;
+}
+
+#musicToggle:hover {
+    background: #302027;
+}
+
+#musicToggle[hidden] {
+    display: none;
+}
+
+#musicIcon {
+    font-size: 15px;
+}
+
+@media (max-width: 600px) {
+    #musicToggle {
+        right: 12px;
+        bottom: 12px;
+        padding: 10px 12px;
+        font-size: 10px;
+    }
+}
+    </style>
+</head>
+
+<body class="no-scroll">
+    <audio id="chapterMusic" loop preload="auto">
+    <source src="winlyloneliness.mp3" type="audio/mpeg">
+    Your browser does not support HTML audio.
+</audio>
+
+<div id="titleScreen">
+    <h1>The Crimson and The Ashen</h1>
+    <div class="title-divider"></div>
+    <p>CHAPTER I</p>
+    <div class="started">STARTED</div>
+</div>
+
+<main id="storyContent">
+<div class="story-container">
+
+<header class="chapter-heading">
+    <div class="eyebrow">THE CRIMSON AND THE ASHEN</div>
+    <h1>Chapter I</h1>
+    <div class="divider"></div>
+    <p>The Snowstorm — Year 805</p>
+</header>
+
+<!-- THE SNOWSTORM -->
+
+<section class="story-scene">
+    <h2>The Snowstorm — Year 805</h2>
+    <div class="scene-setting">Somewhere in the storm, across the snow-covered lands of Eldoria.</div>
+
+    <p>A hooded figure walks alone through the snow-covered lands of Eldoria. After leaving her position as an Authority, Reina Tomoe wanders through the raging blizzard.</p>
+
+    <p>Her weakened Abyssal powers prevent her from blinking away from the storm. She continues walking, enduring the biting cold as snow sweeps past her. Her Abyssal powers have weakened considerably.</p>
+
+    <p>She can no longer blink or dash away from the storm. Her legs tremble with every step. Her breathing grows weaker.</p>
+
+    <p>Eventually, she can no longer keep herself standing.</p>
+    <p class="scene-break">* * *</p>
+    <p>Reina collapses onto the snow.</p>
+
+    <p>She slowly lifts her gaze toward the stormy sky, struggling to remain conscious.</p>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“Will... this... change my life...? Leaving my... title as an Authority... Deishreth... I can't... die here...”</p>
+    </div>
+
+    <p>Several seconds pass. Then, a strange vibration echoes through the snow. The snow begins to shift, slowly moving aside as someone approaches her.</p>
+
+    <p>A figure emerges through the blizzard.</p>
+    <p>It is King Deishreth.</p>
+    <p>He has found her.</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Found you...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“So... *faint cough*... you found me...”</p>
+    </div>
+
+    <p>She manages a faint smirk and smile before losing consciousness.</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Sorry for being late, my love... You can rest while I bash my way through this storm and get us out of here...”</p>
+    </div>
+</section>
+
+<!-- A TRAITOR AMONG THE AUTHORITIES -->
+
+<section class="story-scene">
+    <h2>A Traitor Among the Authorities</h2>
+    <div class="scene-setting">Somewhere in the sky, within a floating realm...</div>
+
+    <p>Following Reina's departure from the Supreme Judgement Syndicate, the remaining Authorities gather to discuss her decision.</p>
+
+    <p class="story-year">THE SUPREME JUDGEMENT SYNDICATE</p>
+
+    <div class="story-dialogue">
+        <strong>Aethel</strong>
+        <p>“So... she left? I was wondering how she could simply abandon her title as an Authority...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Veritas</strong>
+        <p>“Who knows? Maybe she fell in love with that human who rules an empire...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Aethel</strong>
+        <p>“The Haslettian Empire...? What was she thinking?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Ostraea</strong>
+        <p>“There... is only one answer...”</p>
+    </div>
+
+    <p>Ostraea pauses for a moment.</p>
+
+    <div class="story-dialogue">
+        <strong>Ostraea</strong>
+        <p>“She betrayed us...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deisha</strong>
+        <p>“So, what should we do, then? Let her be? Allow her to fall in love with a wretched creature down there?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Ostraea</strong>
+        <p>“Oh? And what would you suggest, Miss Deisha?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deisha</strong>
+        <p>“I say... we slay the traitor.”</p>
+    </div>
+
+    <p>Aethel and Veritas remain silent. Ostraea looks up and settles into her seat.</p>
+
+    <div class="story-dialogue">
+        <strong>Ostraea</strong>
+        <p>“Do as you wish, then...”</p>
+    </div>
+
+    <p>Ostraea does not directly order Reina's death. Instead, she leaves the decision to Deisha, making it feel more like a judgment being permitted than an execution being commanded.</p>
+</section>
+
+<!-- THE KING'S PRIVATE ROOM -->
+
+<section class="story-scene">
+    <h2>The King's Private Room</h2>
+    <div class="scene-setting">Twenty-one minutes later — Eldoria</div>
+
+    <p>They return to Eldoria. Reina is brought to the King's private room, where Deishreth uses warm water and blankets to help restore her body temperature.</p>
+
+    <p>Eventually, Reina awakens.</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Ah... So you're awake now.”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“W-where am I?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Don't panic. This room is my private space. No one, not even the guards, is allowed to enter without permission...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“*Grunts.* Okay, that hurt... How long was I walking through that storm?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Can't say. Maybe fifty minutes... But hey, it's a good thing I found you back there. If I hadn't, you could have been trapped in the ice out there... slowly dying...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“Hmph...”</p>
+    </div>
+</section>
+
+<!-- THE AUTHORITY OF SCARLET -->
+
+<section class="story-scene">
+    <h2>The Authority of Scarlet</h2>
+    <div class="scene-setting">Back within the Supreme Judgement Syndicate...</div>
+
+    <div class="story-dialogue">
+        <strong>Aethel</strong>
+        <p>“Any signs of the Authority of Scarlet?”</p>
+    </div>
+
+    <p>Aethel pauses before speaking again.</p>
+
+    <div class="story-dialogue">
+        <strong>Aethel</strong>
+        <p>“Actually, I do have some information... Miss Ostraea, may I have permission to speak?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Ostraea</strong>
+        <p>“Go on...”</p>
+    </div>
+
+    <p>Aethel stands firmly before the other Authorities.</p>
+
+    <div class="story-dialogue">
+        <strong>Aethel</strong>
+        <p>“I can confirm that the Authority of Scarlet was last seen in the raging storm, not far from the nation known as Eldoria...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Veritas</strong>
+        <p>“So she really did abandon her title as an Authority? What a shame... She's the only one among us who held two titles. I can't deny that it's a pity...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deisha</strong>
+        <p>“So... what is the plan?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Ostraea</strong>
+        <p>“Let's give her a few more years to enjoy her life in the human realm...”</p>
+    </div>
+
+    <p>She pauses, allowing her words to sink in.</p>
+
+    <div class="story-dialogue">
+        <strong>Ostraea</strong>
+        <p>“And then you strike, <span class="censored">*&amp;^*&amp;</span>. From that moment onward...”</p>
+    </div>
+
+    <p>Everyone turns toward Ostraea.</p>
+
+    <div class="story-dialogue">
+        <strong>Ostraea</strong>
+        <p>“Give me her head...”</p>
+    </div>
+
+    <p>She continues coldly.</p>
+
+    <div class="story-dialogue">
+        <strong>Ostraea</strong>
+        <p>“Let it serve as an object lesson for betraying her oath as the Authority of Scarlet and the Obsidian Tide...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Veritas</strong>
+        <p>“Huhuhu... Scary...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Aethel</strong>
+        <p>“Tsk...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deisha</strong>
+        <p>“Understood, Miss <span class="censored">&amp;^*&amp;^</span>...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Ostraea</strong>
+        <p>“This session is dismissed...”</p>
+    </div>
+</section>
+
+<!-- A DIFFERENT LIFE -->
+
+<section class="story-scene">
+    <h2>A Different Life</h2>
+
+    <p>Back in Eldoria, Deishreth asks Reina about her former position and why she chose to leave it behind.</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“So, why did you become an Authority, only to abandon your position afterward?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“It's hard to explain, Deishreth... After all these years of ruling over the world, I... I wanted to live differently. I'm not human like you...”</p>
+    </div>
+
+    <p>She lowers her gaze.</p>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“I'm a cursed woman who possesses dangerous powers... I want to live happily and put an end to this madness. It's all become too much for me...”</p>
+    </div>
+
+    <p>Deishreth falls silent for a moment before approaching her.</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“So, you wanted to live peacefully like everyone else, huh...? Well... why not stay here?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“That's a risky move, King Deishreth... You know I'm a monster...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“The others may think so, but in my eyes, you're not.”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“...?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“You're as beautiful as the day we first met...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“Hmm... That battle ten years ago? The moment our eyes met?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Hehehe...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“You're one of the strangest humans I've ever met. You should be grateful I didn't kill you.”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Oh, I would gladly kneel before you.”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“DEISHRETHHH!!! ARRGH! You're so annoying... Hmph!”</p>
+    </div>
+
+    <p>They both burst into laughter.</p>
+
+    <p>The scene slowly moves away from them and toward the night sky, where the bright moon shines above Eldoria.</p>
+</section>
+
+<!-- THE NIGHTMARE: RUINS OF ELDORIA -->
+
+<section class="story-scene">
+    <h2>The Nightmare — Year: Glitches</h2>
+
+    <p>The next day, Reina remains in a deep sleep as her body continues recovering. Within the depths of her dream, something strange begins to unfold.</p>
+
+    <p>A faint image appears.</p>
+
+    <h3>The Ruins of Eldoria</h3>
+
+    <p>The battlefield is devastated. Debris lies everywhere, and the surrounding houses have been severely damaged.</p>
+
+    <p>Reina is gravely wounded. Her strength has nearly vanished after attempting to fight back against Deisha, the Authority of Dark.</p>
+
+    <p>Nearby, young Jin cries beside his dying mother. Rin has already been abducted by Deisha.</p>
+
+    <div class="story-dialogue">
+        <strong>Jin</strong>
+        <p>“Mom!!! Mom!!!”</p>
+    </div>
+
+    <p>Jin desperately calls for help as Reina struggles to remain conscious. The sound of approaching horses grows louder. King Deishreth finally arrives.</p>
+
+    <p>The image blurs. Their final conversation can barely be heard.</p>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“I-... was happier than... ever when...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Jin</strong>
+        <p>“Mom!!! Mom!!!”</p>
+    </div>
+
+    <p>Jin continues crying.</p>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“When... we first met... you... you changed me...”</p>
+    </div>
+
+    <p>Her voice fades, but she continues speaking.</p>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“You made me understand how the world works... You took me away from this solitude... Please... say it once more... but...”</p>
+    </div>
+
+    <p>Reina reaches out her hand toward Deishreth. Deishreth kneels beside her, holding young Jin in his arms.</p>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“But properly...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“You got it...”</p>
+    </div>
+
+    <p>He looks at her, struggling to hold back his emotions.</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Someday... I will take you...”</p>
+    </div>
+
+    <p>Reina's vision begins to fade. She can barely hear him, and her body stops responding before he can finish his sentence.</p>
+
+    <p>Deishreth continues speaking.</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“...to a place we always talk about...”</p>
+    </div>
+
+    <p>Reina dies peacefully, smiling at Deishreth. Young Jin continues crying, desperately trying to reach his mother. Deishreth closes his eyes, tears faintly streaming down his face.</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“L-Let me finish it... Damn it...”</p>
+    </div>
+
+    <p>The image blurs and fades away.</p>
+</section>
+
+<!-- REINA AWAKENS -->
+
+<section class="story-scene">
+    <h2>The Nightmare</h2>
+
+    <p>Inside the window-side area of King Deishreth's private room, Reina sweats and struggles in her sleep.</p>
+
+    <p>Moments later, she awakens.</p>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“AAAAAAAAAAHH—! ...What...?”</p>
+    </div>
+
+    <p>Tears slowly stream down her face as she screams.</p>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“Wha—... What a terrible dream...”</p>
+    </div>
+
+    <p>A faint sound of running can be heard outside. It grows louder and louder.</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“U... UUUUAAARRGHHHHHH! WHO'S OUT THERE?! COME OUT!!!”</p>
+    </div>
+
+    <p>He swings his sword as he shouts.</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“YOU MANIACS!!! YOU DARE THREATEN MY— Uhh...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“Uhh...”</p>
+    </div>
+
+    <p>Deishreth turns around and notices that Reina is awake.</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Ohhhh! Hey there! You're awake! So, how's the bed?”</p>
+    </div>
+
+    <p>He smiles. Reina is speechless. She quickly wipes her eyes, trying to hide her tears from the King. Deishreth notices.</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Ohhh... Was your dream... sort of terrible?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“Sniff... N-no... I—uh... I'm fine...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“If you need anything, just let me know, okay?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“Hmm...”</p>
+    </div>
+
+    <p>A voice calls from beyond the private room's door.</p>
+
+    <div class="story-dialogue">
+        <strong>Unknown Peasant</strong>
+        <p>“My King! Sorry for interrupting, but the guests have arrived...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Talk about timing... IN A MINUTE!!!”</p>
+    </div>
+
+    <p>Reina looks at Deishreth.</p>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“Guests...?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Hehe, yeah. A guest who might help me find my niece...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“Your niece? Who could it be?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Ehhh... It's a long story. She left this nation probably a decade ago, or... Argh, I don't know...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“Any reason she left? I'm just curious...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“We can talk about it later, hehehe. Just stay here.”</p>
+    </div>
+
+    <p>Deishreth stands up and retrieves his sword.</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“And, uh... I apologize for interrupting your rest. You screamed, so I just... ran for it, hehe.”</p>
+    </div>
+
+    <p>Reina looks confused for a moment before realizing what happened.</p>
+
+    <div class="story-dialogue">
+        <strong>Reina (thinking)</strong>
+        <p class="story-thought">“Did I... scream that loudly? ...No way...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“Y-yeahhh... It's alright...”</p>
+    </div>
+</section>
+
+<!-- THE KING'S NIECE -->
+
+<section class="story-scene">
+    <h2>The King's Niece</h2>
+
+    <p>The scene shifts to a meeting hall where the human guests have arrived. Guards stand firmly in the background, awaiting the King's arrival.</p>
+
+    <p>The guests continue waiting...</p>
+
+    <p>Meanwhile, inside King Deishreth's wardrobe room...</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Ohhh, damn it! Where's my red necktie?! Arghhh, where is it?!”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Maid 1</strong>
+        <p>“My lord... Are you having trouble finding your clothes?”</p>
+    </div>
+
+    <p>Deishreth continues rummaging frantically through his wardrobe.</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Uh, yeahhh! Have you seen my red necktie?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Maid 1</strong>
+        <p>“Ohhh, your red necktie, my lord? It appears that Ms. Varesa took it and put it in the laundry...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“You said... WHAT?!”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Maid 1</strong>
+        <p>“Ahhh! I'm sorry, my lord!!!”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“WHERE IS SHE?!”</p>
+    </div>
+
+    <p>Meanwhile, in the laundry room, Ms. Varesa sits comfortably, reading a book while the King's precious red necktie is being washed inside the washing machine.</p>
+
+    <p>Deishreth arrives.</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“YOUUU!! WHY WOULD YOU—?!”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Varesa</strong>
+        <p>“Ohhh, greetings, my lord! Uhh, what brings you here?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“MY RED... NECK... TIEEE! WHERE IS IT?!”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Varesa</strong>
+        <p>“Ohhh, that one?”</p>
+    </div>
+
+    <p>Varesa points toward the washing machine. Deishreth opens it and searches for his necktie. Instead, he accidentally grabs something else.</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Found it!! Uhh... oops.”</p>
+    </div>
+
+    <p>He freezes. In his hand is a pink pair of women's underwear. Deishreth is shocked, his face turning bright red. A maid standing in the background witnesses the scene and looks equally shocked, her cheeks turning red as well.</p>
+
+    <div class="story-dialogue">
+        <strong>Varesa</strong>
+        <p>“Uhh, ohhh... My lord's a perv, pervyyyy!”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“No, nooo! You guys misunderstood! I was looking for my necktIEEE!!!”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth (thinking)</strong>
+        <p class="story-thought">“WHY IS THIS HAPPENING TO MEEEE!!!!!”</p>
+    </div>
+
+    <div class="scene-break">* * *</div>
+
+    <p class="story-year">Later — The Meeting Hall</p>
+
+    <p>The guests continue waiting for the King.</p>
+
+    <div class="story-dialogue">
+        <strong>Unknown Guest 1</strong>
+        <p>“He's late...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Guard 1</strong>
+        <p>“My lord will be here in a minute.”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Unknown Guest 1</strong>
+        <p>“Just go to him. Immediately.”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Guard 1</strong>
+        <p>“Learn to wait, sire. He will be here soon.”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Unknown Guest 1</strong>
+        <p>“*Grunts.* Tsk.”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Unknown Guest 2</strong>
+        <p>“Easy there, now... Just learn to wait, won't you?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Unknown Guest 1</strong>
+        <p>“Tsk... Whatever...”</p>
+    </div>
+
+    <p>The door opens. King Deishreth enters the meeting hall. He walks properly, maintaining his royal composure despite the irritation on his face.</p>
+
+    <p>He takes his seat.</p>
+
+    <div class="story-dialogue">
+        <strong>Unknown Guest 2</strong>
+        <p>“Greetings, Lord Deishreth—uhh, what happened to you?”</p>
+    </div>
+
+    <p>A reddish handprint is visible on the left side of Deishreth's face, as though he had been slapped. Nevertheless, he maintains his firm posture.</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“This? This is nothing.”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Unknown Guest 2</strong>
+        <p>“...Okay then, Lord Deishreth.”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Unknown Guest 1</strong>
+        <p>“So... you finally arrived. I expected less from you, King Deishreth, but... look at this place.”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Much obliged, dear guests. So... do you have any information about my niece?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Unknown Guest 2</strong>
+        <p>“Good thing you asked. In fact, we have evidence and information about her whereabouts. However, we haven't confirmed everything yet.”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Ohhh? I would love to hear it.”</p>
+    </div>
+
+    <p>Unknown Guest 2 opens his bag and takes out a map and several documents. He points out her suspected whereabouts and presents the other pieces of information.</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“In the nation of Valeria...?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Unknown Guest 2</strong>
+        <p>“We haven't confirmed everything yet, but some of our men have confirmed that she's one of the...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Hmm...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Unknown Guest 1</strong>
+        <p>“Primes... A lower rank within the Yomi Sovereignty.”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“The Yomi Sovereignty...”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Unknown Guest 2</strong>
+        <p>“Indeed. She's currently in the position of Prime II.”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Deishreth</strong>
+        <p>“Fasha...”</p>
+    </div>
+
+    <p>The scene changes. In Valeria, Fasha stands among the Prime Sovereigns, gazing toward the hall. Her figure appears faintly.</p>
+
+    <div class="story-dialogue">
+        <strong>Deishreth (voice-over)</strong>
+        <p>“What happened to you...”</p>
+    </div>
+
+    <p>The King's words linger as Fasha's faint appearance remains on the screen, revealing her position as a Prime Sovereign.</p>
+</section>
+
+<!-- YEAR 810 -->
+
+<section class="story-scene">
+    <h2>Year 810 — Five Years Later</h2>
+
+    <p>Jinsashi Rouge Haslett is born.</p>
+
+    <p>Baby Jin lies in his bed, surrounded by several maids.</p>
+
+    <div class="story-dialogue">
+        <strong>Maid 1</strong>
+        <p>“He's so cuuuute!”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Maid 2</strong>
+        <p>“He looks just like his father!”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Maid 3</strong>
+        <p>“I wanna squeeze his cheeks!!”</p>
+    </div>
+
+    <p>The fourth maid suddenly shouts.</p>
+
+    <div class="story-dialogue">
+        <strong>Maid 4</strong>
+        <p>“What are you all doing?!?!?! You're making him cryyy!”</p>
+    </div>
+
+    <p>Baby Jin begins to cry.</p>
+
+    <div class="story-dialogue">
+        <strong>Maid 3</strong>
+        <p>“Look what you've done!!”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Maid 1</strong>
+        <p>“Ohhh nooo, he's cryinggg! Don't cry!”</p>
+    </div>
+
+    <p>Maid 1 makes a funny face, and baby Jin's cries slowly begin to fade.</p>
+
+    <div class="story-dialogue">
+        <strong>Maid 2</strong>
+        <p>“How'd you do that...? That's impressive!”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Maid 1</strong>
+        <p>“Hehe, I learned it from taking care of my little brother when he was a baby, too!”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Maid 4</strong>
+        <p>“Alright, alright! Let's get back to work before the King appears!”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Maid 3</strong>
+        <p>“Aww, but I wanna play with him for a while!”</p>
+    </div>
+
+    <p>Minutes later, Reina arrives.</p>
+
+    <div class="story-dialogue">
+        <strong>Maids 1–4</strong>
+        <p>“Good morning, Lady Reina!”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“Good morning... How is he?”</p>
+    </div>
+
+    <div class="story-dialogue">
+        <strong>Maid 3</strong>
+        <p>“He is... VERY CUTE, LADY REINA! AAAAAAH!”</p>
+    </div>
+
+    <p>Maid 1, Maid 2, and Maid 4 simultaneously headbutt Maid 3.</p>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“Oh... *Faint laugh.* Thank you...”</p>
+    </div>
+
+    <p>Reina walks over to baby Jin.</p>
+
+    <p>She gently picks him up, cuddles him, and kisses his forehead.</p>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“Welcome to the world... My dear Jinsashi... Rouge... Haslett...”</p>
+    </div>
+
+    <p>Baby Jin raises his tiny hands toward Reina. He makes happy little noises.</p>
+
+    <p>A tear rolls down Reina's cheek.</p>
+
+    <div class="story-dialogue">
+        <strong>Reina</strong>
+        <p>“*Sniff*... Ahh... So this is... how a normal life feels...”</p>
+    </div>
+</section>
+
+<!-- CHAPTER END -->
+
+<div class="chapter-heading">
+    <div class="divider"></div>
+    <p>End of Chapter I</p>
+</div>
+
+<button id="finishedButton" type="button">FINISHED</button>
+
+</div>
+</main>
+
+<!-- CINEMATIC ENDING SCREEN -->
+
+<section id="ending-screen" aria-label="Chapter ending">
+    <div class="ending-line" id="ending1">
+        Why would you risk yourself for me...?
+    </div>
+
+    <div class="ending-line" id="ending2">
+        I don't know. Maybe I can't live without you...
+    </div>
+
+    <div class="ending-line" id="ending3">
+        Okay, you won't get me with those words.
+    </div>
+
+    <div class="ending-line" id="ending4">
+        Haha! That didn't work, huh...?
+    </div>
+
+    <div class="ending-line" id="endingNarration">
+        She appears to be annoyed at first but.. <span id="smiledWord">smiled</span> a little. . .
+    </div>
+
+    <div class="ending-line" id="endingThought">
+        (I wish this would last forever.....)
+    </div>
+
+    <div id="completionBox">
+        <h2>Chapter 1 Complete</h2>
+    </div>
+
+    <button id="returnButton" type="button">RETURN</button>
+</section>
+
+<button id="musicToggle" type="button"
+        aria-label="Pause background music"
+        aria-pressed="false" hidden>
+    <span id="musicIcon">Ⅱ</span>
+    <span id="musicLabel">PAUSE MUSIC</span>
+</button>
+    
+<script>
+    const titleScreen = document.getElementById("titleScreen");
+    const storyContent = document.getElementById("storyContent");
+    const endingScreen = document.getElementById("ending-screen");
+
+    const chapterMusic = document.getElementById("chapterMusic");
+    const musicToggle = document.getElementById("musicToggle");
+    const musicIcon = document.getElementById("musicIcon");
+    const musicLabel = document.getElementById("musicLabel");
+
+    chapterMusic.volume = 0.35;
+
+    function updateMusicButton() {
+        const isPlaying = !chapterMusic.paused;
+
+        musicIcon.textContent = isPlaying ? "Ⅱ" : "▶";
+        musicLabel.textContent = isPlaying ? "PAUSE MUSIC" : "RESUME MUSIC";
+
+        musicToggle.setAttribute(
+            "aria-label",
+            isPlaying ? "Pause background music" : "Resume background music"
+        );
+        musicToggle.setAttribute("aria-pressed", String(isPlaying));
+    }
+
+    async function startChapterMusic() {
+        try {
+            await chapterMusic.play();
+        } catch (error) {
+            console.warn(
+                "Autoplay was blocked or the audio file could not load. Check winlyloneliness.mp3.",
+                error
+            );
+        }
+
+        updateMusicButton();
+    }
+
+    /* OPENING SEQUENCE */
+    window.addEventListener("load", () => {
+        startChapterMusic();
+
+        window.setTimeout(() => {
+            titleScreen.classList.add("fade-out");
+            storyContent.classList.add("story-visible");
+            document.body.classList.remove("no-scroll");
+
+            /* Show the music button when the chapter content opens. */
+            musicToggle.hidden = false;
+            updateMusicButton();
+
+            window.setTimeout(() => {
+                titleScreen.remove();
+            }, 1600);
+        }, 6500);
+    });
+
+    /* PAUSE / RESUME MUSIC */
+    musicToggle.addEventListener("click", async () => {
+        if (chapterMusic.paused) {
+            try {
+                await chapterMusic.play();
+            } catch (error) {
+                console.warn("Unable to resume the chapter music.", error);
+            }
+        } else {
+            chapterMusic.pause();
+        }
+
+        updateMusicButton();
+    });
+
+    chapterMusic.addEventListener("play", updateMusicButton);
+    chapterMusic.addEventListener("pause", updateMusicButton);
+
+    const wait = (ms) =>
+        new Promise(resolve => window.setTimeout(resolve, ms));
+
+    /* DIALOGUE FADE-WIPE */
+    async function revealDialogue(id, duration = 2200) {
+        const element = document.getElementById(id);
+
+        element.classList.add("show");
+
+        await wait(duration);
+
+        element.classList.add("gray");
+    }
+
+    /* PREVENT MULTIPLE ENDING SEQUENCES */
+    let chapterEndingStarted = false;
+
+    /* CHAPTER ENDING SEQUENCE */
+    async function finishChapter() {
+        if (chapterEndingStarted) {
+            return;
+        }
+
+        chapterEndingStarted = true;
+
+        endingScreen.classList.add("active");
+        document.body.classList.add("no-scroll");
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                endingScreen.classList.add("fade-in");
+            });
+        });
+
+        await wait(500);
+
+        await revealDialogue("ending1");
+        await wait(300);
+
+        await revealDialogue("ending2");
+        await wait(300);
+
+        await revealDialogue("ending3");
+        await wait(300);
+
+        await revealDialogue("ending4");
+        await wait(800);
+
+        ["ending1", "ending2", "ending3", "ending4"].forEach(id => {
+            document.getElementById(id).style.opacity = "0";
+        });
+
+        await wait(1200);
+
+        /* NARRATION */
+        const narration = document.getElementById("endingNarration");
+        const smiledWord = document.getElementById("smiledWord");
+
+        narration.classList.add("show");
+
+        await wait(2200);
+
+        narration.classList.add("gray");
+
+        await wait(2100);
+
+        smiledWord.style.color = "#fff";
+
+        await wait(1600);
+
+        narration.style.opacity = "0";
+
+        await wait(1300);
+
+        /* HIDDEN THOUGHT */
+        const thought = document.getElementById("endingThought");
+
+        thought.classList.add("show");
+
+        await wait(3000);
+
+        thought.classList.add("crimson");
+
+        await wait(2500);
+
+        thought.style.opacity = "0";
+
+        await wait(1400);
+
+        /* COMPLETION SCREEN */
+        document.getElementById("completionBox").classList.add("show");
+
+        await wait(1800);
+
+        document.getElementById("returnButton").classList.add("show");
+    }
+
+    /* RETURN TO EXPANSIONS */
+    function returnToExpansions() {
+        endingScreen.classList.add("fade-out");
+
+        window.setTimeout(() => {
+            window.location.href = "expansions.html";
+        }, 1200);
+    }
+
+    /* BUTTON EVENTS */
+    document.getElementById("finishedButton")
+        .addEventListener("click", finishChapter);
+
+    document.getElementById("returnButton")
+        .addEventListener("click", returnToExpansions);
+</script>
+
+</body>
+</html>
