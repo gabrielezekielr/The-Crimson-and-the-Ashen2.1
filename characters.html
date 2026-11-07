@@ -557,7 +557,7 @@
 
         <div class="slide-controls">
             <button class="arrow-button" id="previous-button" type="button" aria-label="Previous character">&lt;</button>
-            <span id="slide-counter">01 / 04</span>
+            <span id="slide-counter">01 / 05</span>
             <button class="arrow-button" id="next-button" type="button" aria-label="Next character">&gt;</button>
         </div>
     </main>
@@ -587,7 +587,7 @@
             },
             {
                 name: "Rin Tomoe",
-                title: "THE BLEEDING HEART SOVEREIGN",
+                title: "THE BLEEDING HEART",
                 rank: "IV Grand",
                 image: "RinTomoe.jpe",
                 imageAlt: "Rin Tomoe character artwork"
@@ -612,7 +612,14 @@
                 originalImage: "yomisiahogartwork.jpe",
                 imageAlt: "Yomisiah Anastasia Soverenia current artwork",
                 originalImageAlt: "Yomisiah Anastasia Soverenia original artwork"
-            }
+            },
+            {
+                name: "King Deishreth Haslett IV",
+                title: "KING OF ELDORIA",
+                rank: "Human King",
+                image: "KingDeishreth.png",
+                imageAlt: "King Deishreth Haslett IV character artwork"
+}
         ];
 
         const profileData = {
@@ -677,6 +684,9 @@
                         <li><span class="ability-name">Keeping Myself Safe</span> — replenishes Lost Energy using residual Energy from defeated enemies.</li>
                         <li><span class="ability-name">Abyss Touch</span> — associated with her black hair tip and reducing Physical Defense.</li>
                         <li><span class="ability-name">I Can See Your Heart Cry</span> — detects nearby living beings.</li>
+                        <li><span class="ability-name">Let's Try This</span> — Fires a heart-shaped projectile that explodes and releases four additional hearts to strike the targeted enemy.</li>
+                        <li><span class="ability-name">Hearthouse Kick but in a Unique Way!</span> — A roundhouse kick knocks an enemy backward into a heart-shaped prison that traps and burns them while draining health for three seconds.</li>
+                        <li><span class="ability-name">Don't Ruined My Ponytailed Hair!</span> — She enters a slashing state and attacks with the pointed black tip of her ponytail.</li>
                         <li><span class="ability-name">Don't Break My Dying Heart</span> — When Rin is injured, her wounds begin to bleed. Contact with an enemy can inflict Burning, but maintaining this effect consumes both energy and Life Force.</li>
                         <li><span class="ability-name">My Bleeding Heart Never Fades</span> — Rin enters a pink, broken-blade-like cocoon and awakens after 40 seconds.</li>
                         <li><span class="ability-name">Courage Warmth's my Heart</span> — creates a heart-shaped shield for 8 seconds.</li>
@@ -761,7 +771,55 @@
                     <h3>COMBAT OPTIONS</h3>
                     <p>Yomisiah's combat abilities have not yet been added to this profile.</p>
                 `
-            }
+            },
+
+
+"King Deishreth Haslett IV": {
+    info: `
+        <h3>CHARACTER INFO</h3>
+        <p>King Deishreth Haslett IV is the human King of Eldoria and a member of the Haslett royal bloodline. As the fourth heir of his family's bloodline, he carries the legacy and responsibilities of his royal lineage.</p>
+
+        <p>He is the partner of Reina Tomoe and the father of Jin Tomoe and Rin Tomoe. Through his relationship with Reina, his family became connected to the Abyssal lineage, joining the human royal bloodline of Eldoria with the heritage of the Mountains of Abyss.</p>
+
+        <p>Deishreth is also associated with the Battle Against the Abyss and the military conflicts involving different kingdoms and the Yomi Sovereignty.</p>
+    `,
+
+    quickInfo: `
+        <h3>QUICK INFO</h3>
+        <ul class="quick-info-list">
+            <li><span class="quick-info-label">FULL NAME</span><span class="quick-info-value">King Deishreth Haslett IV</span></li>
+            <li><span class="quick-info-label">KNOWN AS</span><span class="quick-info-value">Deishreth</span></li>
+            <li><span class="quick-info-label">POSITION</span><span class="quick-info-value">King of Eldoria</span></li>
+            <li><span class="quick-info-label">SPECIES</span><span class="quick-info-value">Human</span></li>
+            <li><span class="quick-info-label">AGE</span><span class="quick-info-value">34</span></li>
+            <li><span class="quick-info-label">BLOODLINE</span><span class="quick-info-value">Fourth Heir</span></li>
+            <li><span class="quick-info-label">KINGDOM</span><span class="quick-info-value">Eldoria</span></li>
+            <li><span class="quick-info-label">PARTNER</span><span class="quick-info-value">Reina Tomoe</span></li>
+            <li><span class="quick-info-label">SON</span><span class="quick-info-value">Jin Tomoe</span></li>
+            <li><span class="quick-info-label">DAUGHTER</span><span class="quick-info-value">Rin Tomoe</span></li>
+        </ul>
+    `,
+
+    combat: `
+        <h3>COMBAT OPTIONS</h3>
+
+        <h3>SKILL 1 — "King's Calling"</h3>
+        <p>Deishreth raises his sword, summoning a sphere of spirits that resurrects nearby fallen knights. The resurrected knights remain by his side and fight alongside him. However, while this ability remains active, Deishreth's Life Force rapidly decreases.</p>
+
+        <h3>SKILL 2 — "War-Hardened Supreme"</h3>
+        <p>Deishreth's extensive experience on the battlefield grants him enhanced combat attributes and exceptional mastery of warfare. His battle-hardened instincts allow him to adapt his fighting techniques and approach to different combat situations.</p>
+
+        <h3>SKILL 3 — "Onward"</h3>
+        <p>Deishreth commands his troops to advance and attack in a designated direction, coordinating their movements toward the targeted area.</p>
+
+        <h3>SKILL 4 — "Raging Blade"</h3>
+        <p>Deishreth repeatedly swings his enhanced sword at nearby monsters, delivering ten consecutive strikes. After the tenth strike, he briefly charges his sword before unleashing a powerful, wide-reaching slash.</p>
+
+        <h3>PASSIVE — "Jin, You've Grown Stronger."</h3>
+        <p>When Deishreth fights alongside Jin Tomoe, he grants Jin <strong>+10 Physical Defense</strong> and increased Movement Speed. This passive represents Deishreth's support and recognition of his son's growth as a warrior.</p>
+    `
+}
+
         };
 
         let currentCharacter = 0;
